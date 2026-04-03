@@ -36,8 +36,8 @@ function App() {
               onChange={(e) => setSelectedAccount(e.target.value)}
               style={{ padding: '8px', fontSize: '1.2em', fontFamily: 'inherit' }}
             >
-              <option value="비니">비니 🧑</option>
-              <option value="송이">송이 👧</option>
+              <option value="비니">비니 👧</option>
+              <option value="송이">송이 🧑</option>
             </select>
             
             <input 

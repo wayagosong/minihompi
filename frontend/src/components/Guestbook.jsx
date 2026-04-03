@@ -40,9 +40,9 @@ const Guestbook = ({ username }) => {
     const files = Array.from(e.target.files);
     const compressedImages = [];
 
-    // 압축 옵션: 1MB 이하 설정
+    // 압축 옵션: Firestore 용량 제한(1MB)을 넘지 않도록 Base64 뻥튀기를 고려하여 매우 타이트하게 설정
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 0.1,
       maxWidthOrHeight: 1024,
       useWebWorker: true
     };
@@ -84,7 +84,7 @@ const Guestbook = ({ username }) => {
       setImages([]);
     } catch (e) {
       console.error("Error adding document: ", e);
-      alert("Firebase 설정이 필요합니다.");
+      alert("업로드에 실패했습니다. 사진 용량이 너무 크거나 인터넷 문제가 있을 수 있습니다.");
     }
   };
 
@@ -107,9 +107,9 @@ const Guestbook = ({ username }) => {
             onChange={handleImageChange}
             id="file-upload"
           />
-          <button type="submit" style={{ padding: '8px 15px', background: '#2da4ce', color: 'white', border: 'none', cursor: 'pointer' }}>등록</button>
+          <button type="submit" style={{ padding: '8px 15px', background: 'var(--main-color)', color: 'white', border: 'none', cursor: 'pointer' }}>등록</button>
         </div>
-        {images.length > 0 && <p style={{ fontSize: '0.8em', color: 'green' }}>{images.length}장의 사진이 첨부되었습니다 (1MB 이하 압축 완료).</p>}
+        {images.length > 0 && <p style={{ fontSize: '0.8em', color: 'green' }}>{images.length}장의 사진이 첨부되었습니다 (자동 압축 됨).</p>}
       </form>
 
       <div className="guestbook-list">
