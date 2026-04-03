@@ -1,0 +1,27 @@
+:root {
+  --bg-out: #a3a3a3;
+  --bg-in: #f7f7f7;
+  --main-color: #2da4ce;
+  --font-color: #333333;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'DungGeunMo', sans-serif;
+  background-color: var(--bg-out);
+  color: var(--font-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
