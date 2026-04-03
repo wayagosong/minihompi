@@ -1,14 +1,14 @@
 :root {
-  --bg-out: #a3a3a3;
+  --bg-out: #87CEEB; /* Sky blue background outside */
   --bg-in: #f7f7f7;
-  --main-color: #2da4ce;
+  --main-color: #00BFFF; /* Deep sky blue main color */
   --font-color: #333333;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'DungGeunMo', sans-serif;
+  font-family: 'Jua', sans-serif;
   background-color: var(--bg-out);
   color: var(--font-color);
   min-height: 100vh;

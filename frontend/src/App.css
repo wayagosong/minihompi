@@ -2,7 +2,7 @@
   width: 1000px;
   max-width: 95vw;
   height: 650px;
-  background-color: #79c8ce;
+  background-color: #87CEFA; /* Light Sky Blue */
   border-radius: 20px;
   padding: 15px;
   display: flex;
@@ -97,7 +97,7 @@
 
 .nav-item.active {
   background-color: white;
-  color: #2da4ce;
+  color: var(--main-color);
   margin-left: -2px; /* Pull into content section slightly */
   width: 72px;
   border-left: 2px solid white;
@@ -143,7 +143,7 @@
 .message {
   margin-bottom: 10px;
 }
-.message .user { font-weight: bold; color: #2da4ce; }
+.message .user { font-weight: bold; color: var(--main-color); }
 .message .time { font-size: 0.8em; color: #999; margin-left: 5px;}
 .message.notification { color: #888; font-style: italic; text-align: center; }
 

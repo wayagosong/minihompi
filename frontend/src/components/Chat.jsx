@@ -1,38 +1,58 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import { db } from '../firebase/firebase';
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
 
 const Chat = ({ username }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // 상대 경로(같은 도메인)의 Socket 통신으로 변경
-    socketRef.current = io();
-
-    // 서버에 접속했음을 알림
-    socketRef.current.emit('join', username);
-
-    // 메시지 수신 리스너
-    socketRef.current.on('message', (message) => {
-      setMessages((prev) => [...prev, message]);
+    // Firestore 'chats' 컬렉션에서 메시지 시간 순으로 가져오기
+    const q = query(collection(db, 'chats'), orderBy('createdAt', 'asc'));
+    
+    // 실시간 리스너 연결
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedMessages = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setMessages(fetchedMessages);
     });
 
+    // 시스템 메시지: 본인 로그인 시 알림 (소켓 연결시 모두에게 브로드캐스트 하던 것을 로컬 알림으로 변경)
+    // 영구 기록을 원하면 Firestore에 addDoc으로 type: 'notification' 을 넣을 수 있으나 
+    // 여기서는 메시지 로그만 영구 저장합니다.
+    
     return () => {
-      socketRef.current.disconnect();
+      unsubscribe();
     };
-  }, [username]);
+  }, []);
 
-  // 새로운 메시지가 추가될 때마다 자동으로 스크롤 내리기 (Scroll to bottom)
+  // 새로운 메시지가 추가될 때마다 자동으로 스크롤 내리기
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessage = () => {
-    if (input.trim() !== '') {
-      socketRef.current.emit('sendMessage', { text: input });
-      setInput('');
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
+    
+    const textToSend = input;
+    setInput(''); // 입력창 미리 비우기
+
+    const timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    try {
+      await addDoc(collection(db, 'chats'), {
+        type: 'message',
+        username: username,
+        text: textToSend,
+        time: timeString,
+        createdAt: serverTimestamp()
+      });
+    } catch (error) {
+      console.error("채팅 전송 에러:", error);
+      alert("Firebase 데이터베이스 오류가 발생했습니다.");
     }
   };
 
@@ -40,7 +60,7 @@ const Chat = ({ username }) => {
     <div className="chat-container">
       <div className="chat-messages">
         {messages.map((msg, index) => (
-          <div key={index} className={`message ${msg.type}`}>
+          <div key={msg.id || index} className={`message ${msg.type || 'message'}`}>
             {msg.type === 'notification' ? (
               <span>{msg.text}</span>
             ) : (
@@ -63,7 +83,7 @@ const Chat = ({ username }) => {
           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
           placeholder="메시지를 입력하세요..."
         />
-        <button onClick={sendMessage}>전송</button>
+        <button onClick={sendMessage} style={{ backgroundColor: 'var(--main-color)', fontFamily: 'inherit' }}>전송</button>
       </div>
     </div>
   );

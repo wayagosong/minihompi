@@ -1,21 +1,21 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
 
-// Your web app's Firebase configuration
-// 여기는 반드시 유저의 실제 firebaseConfig로 교체되어야 합니다!
 const firebaseConfig = {
-  apiKey: "API_KEY_PLACEHOLDER",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyB3U04WPfu94TzP_3axnbI1rPKyRi48mFc",
+  authDomain: "minihompi.firebaseapp.com",
+  projectId: "minihompi",
+  storageBucket: "minihompi.firebasestorage.app",
+  messagingSenderId: "659567272405",
+  appId: "1:659567272405:web:995546d0a007798de01d5c",
+  measurementId: "G-WTERFFJN61"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app); // Storage for Images (optional depending on implementation)
+const storage = getStorage(app);
+// const analytics = getAnalytics(app); // Optional for this app
 
 export { db, storage };
